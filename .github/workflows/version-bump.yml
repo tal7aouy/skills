@@ -1,0 +1,39 @@
+name: Version Bump
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "*-helper/**"
+      - '!\*-helper/VERSION'
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # allow pushing back
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bump versions of all helpers
+        run: |
+          for dir in *-helper; do
+            if [ -f "$dir/VERSION" ]; then
+              CURRENT=$(cat "$dir/VERSION" | tr -d '[:space:]')
+              NEW=$((CURRENT + 1))
+              echo "$NEW" > "$dir/VERSION"
+              echo "Bumped $dir: $CURRENT -> $NEW"
+              git add "$dir/VERSION"
+            fi
+          done
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --cached --quiet && exit 0
+          git commit -m "chore: bump helper versions"
+          # push sometimes fails on forks; don't let that break the workflow
+          git push || echo "push failed (maybe running in fork without write access)"

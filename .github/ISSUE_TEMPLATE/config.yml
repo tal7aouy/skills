@@ -1,0 +1,11 @@
+blank_issue_enabled: false
+contact_links:
+  - name: Issue
+    url: https://github.com/tal7aouy/skills/issues/new?template=issue.md
+    about: Report a problem or unexpected behavior
+  - name: Feature Request
+    url: https://github.com/tal7aouy/skills/issues/new?template=feature_request.md
+    about: Suggest an improvement or new capability
+  - name: Question
+    url: https://github.com/tal7aouy/skills/issues/new?template=question.md
+    about: Ask a usage question
